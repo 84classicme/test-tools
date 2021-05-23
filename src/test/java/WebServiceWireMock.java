@@ -1,3 +1,4 @@
+import com.generated.GetCountryResponse;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.util.StringUtils;
@@ -26,23 +27,25 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.getAllServeEvents;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 @TestComponent
 public class WebServiceWireMock {
 
-    private  final String NAMESPACE_URI = "http://localhost";
+    private  final String NAMESPACE_URI = "http://io.generated/country-service";
     private  final String NAMESPACE_PREFIX = "tns1";
-    private final String SERVICE_ENDPOINT = "/rel/path/to/SEI";
+    private final String SERVICE_ENDPOINT = "/getCountry";
 
     public List<ServeEvent> getRequests(){
         return getAllServeEvents();
     }
 
-    public void mockVertexResponse(final String pathToXml){
+    public void mockGetCountryResponse(final String pathToXml) throws IOException {
         String response = "";
-        SoapObject fromXmlSoapObject = new SoapObject();
-        String serSoapObj = serializeObject(fromXmlSoapObject);
+        GetCountryResponse fromXmlSoapObject = TestUtils.getCountryResponseFromXml(pathToXml);
+        response = serializeObject(fromXmlSoapObject);
+        stubFor(post(urlPathMatching(SERVICE_ENDPOINT))
+            .willReturn(aResponse().withHeader("Content-Type", "text/xml").withBody(response)));
     }
 
     public <T> String serializeObject(T object){

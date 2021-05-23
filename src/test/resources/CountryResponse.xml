@@ -1,0 +1,8 @@
+<GetCountryResponse>
+    <country>
+        <name>NewTest</name>
+        <population>1</population>
+        <capital>Here</capital>
+        <currency>MGB</currency>
+    </country>
+</GetCountryResponse>

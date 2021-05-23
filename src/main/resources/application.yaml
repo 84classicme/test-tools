@@ -1,0 +1,3 @@
+soap:
+  country-service:
+    endpoint-url: remote.service.com:8080/getCountry

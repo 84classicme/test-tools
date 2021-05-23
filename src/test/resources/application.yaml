@@ -1,0 +1,3 @@
+soap:
+  country-service:
+    endpoint-url: http://localhost:8080/path/to/SEI
