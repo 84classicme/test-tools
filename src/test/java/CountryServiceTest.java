@@ -22,6 +22,7 @@ public class CountryServiceTest {
         wireMock.mockGetCountryResponse("src/test/resources/CountryResponse.xml");
         GetCountryRequest request = TestUtils.getCountryRequestFromXml("src/test/resources/CountryRequest.xml");
         countryService = new CountryService();
+        countryService.setServiceEndpointUrl("http://localhost:8088/getCountry");
 
         StepVerifier.create(countryService.getCountry(request))
             .expectNextMatches(response -> "NewTest".equals(response.getCountry().getName()))
