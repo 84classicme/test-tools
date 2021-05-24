@@ -22,7 +22,7 @@ public class CountryService {
 
     private WebClientConfig webClientConfig;
 
-    public Mono<Country> getCountryFromRestService(Country input) throws ApplicationException {
+    public Mono<Country> getCountryFromRestService(Country input) {
         webClientConfig = new WebClientConfig();
         WebClient webClient = webClientConfig.reactiveRestClient();
         return webClient.get()
