@@ -3,6 +3,7 @@ import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.tcp.TcpClient;
@@ -12,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 public class WebClientConfig {
 
     @Bean
-    public WebClient reactiveSoapClient(){
+    public WebClient reactiveRestClient(){
         TcpClient tcpClient = TcpClient.create();
 
         tcpClient
@@ -22,16 +23,11 @@ public class WebClientConfig {
                 connection.addHandlerLast(new WriteTimeoutHandler(5000, TimeUnit.MILLISECONDS));
             });
 
-//        ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder().codecs( clientCodecConfigurer -> {
-//            clientCodecConfigurer.customCodecs().register(new Jaxb2SoapEncoder());
-//            clientCodecConfigurer.customCodecs().register(new Jaxb2SoapDecoder());
-//        }).build();
-
         WebClient webClient = WebClient.builder()
             .clientConnector(new ReactorClientHttpConnector(HttpClient.from(tcpClient).wiretap(true)))
-//            .exchangeStrategies( exchangeStrategies )
             .build();
 
         return webClient;
     }
+
 }
