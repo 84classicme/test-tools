@@ -1,8 +1,10 @@
+package com.example.feature;
+
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
+@Builder
 public class Country {
     String name;
     int population;

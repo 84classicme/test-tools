@@ -1,3 +1,6 @@
+package com.example;
+
+import com.example.feature.Country;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.generated.GetCountryRequest;

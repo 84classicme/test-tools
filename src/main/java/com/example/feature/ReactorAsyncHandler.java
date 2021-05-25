@@ -1,3 +1,5 @@
+package com.example.feature;
+
 import reactor.core.publisher.MonoSink;
 
 import javax.xml.ws.AsyncHandler;
@@ -11,7 +13,7 @@ import java.util.concurrent.TimeoutException;
  * <h2>Usage:</h2>
  *
  * <pre>
- *     Mono.create(sink -> endpoint.method(argument, ReactorAsyncHandler.into(sink));
+ *     Mono.create(sink -> endpoint.method(argument, com.example.feature.ReactorAsyncHandler.into(sink));
  * </pre>
  */
 public class ReactorAsyncHandler {

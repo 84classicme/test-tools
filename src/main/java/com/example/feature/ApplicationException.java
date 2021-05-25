@@ -1,3 +1,5 @@
+package com.example.feature;
+
 import lombok.Getter;
 
 @Getter

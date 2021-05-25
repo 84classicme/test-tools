@@ -1,3 +1,11 @@
+package com.example.feature;
+
+import com.example.RestServiceWireMock;
+import com.example.TestUtils;
+import com.example.WebServiceWireMock;
+import com.example.feature.ClientException;
+import com.example.feature.Country;
+import com.example.feature.CountryService;
 import com.generated.GetCountryRequest;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Rule;
@@ -14,12 +22,13 @@ public class CountryServiceTest {
     public WireMockRule wireMockRule = new WireMockRule(options().port(8088),false);
 
     CountryService countryService;
-    WebServiceWireMock wireMock;
+    WebServiceWireMock wsWireMock;
+    RestServiceWireMock restWireMock;
 
     @Test
     public void testGetCountryFromWS() throws IOException {
-        wireMock = new WebServiceWireMock();
-        wireMock.mockGetCountrySoapResponse("src/test/resources/xml/CountryResponse.xml");
+        wsWireMock = new WebServiceWireMock();
+        wsWireMock.mockGetCountrySoapResponse("src/test/resources/xml/CountryResponse.xml");
         GetCountryRequest request = TestUtils.getCountryRequestFromXml("src/test/resources/xml/CountryRequest.xml");
 
         countryService = new CountryService();
@@ -28,13 +37,12 @@ public class CountryServiceTest {
         StepVerifier.create(countryService.getCountryFromWebService(request))
             .expectNextMatches(response -> "NewTest".equals(response.getCountry().getName()))
             .verifyComplete();
-
     }
 
     @Test
     public void testGetCountryFromRest() throws IOException {
-        wireMock = new WebServiceWireMock();
-        wireMock.mockGetCountryRest("src/test/resources/json/country.json");
+        restWireMock = new RestServiceWireMock();
+        restWireMock.mockGetCountryRest("src/test/resources/json/country.json");
         Country request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
 
         countryService = new CountryService();
@@ -43,30 +51,29 @@ public class CountryServiceTest {
         StepVerifier.create(countryService.getCountryFromRestService(request))
             .expectNextMatches(response -> "MyCountry".equals(response.getName()) && response.getPopulation() == 1)
             .verifyComplete();
-
     }
 
     @Test
     public void testHandle4xxFromRest() throws IOException {
-        wireMock = new WebServiceWireMock();
-        wireMock.mockThisStatusForRest(400);
+        restWireMock = new RestServiceWireMock();
+        restWireMock.mockThisStatusForRest(400);
         Country request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
 
         countryService = new CountryService();
         countryService.setServiceEndpointUrl("http://localhost:8088/country");
 
         StepVerifier.create(countryService.getCountryFromRestService(request))
-            .expectErrorMatches(t -> t.getMessage().equals("Cannot process CountryService.getCountry due to client error.") &&
+            .expectErrorMatches(t -> t.getMessage().equals("Cannot process com.example.feature.CountryService.getCountry due to client error.") &&
                 t.getSuppressed()[0] instanceof ClientException &&
-                t.getSuppressed()[0].getMessage().equals("CLIENT EXCEPTION in CountryService.") &&
+                t.getSuppressed()[0].getMessage().equals("CLIENT EXCEPTION in com.example.feature.CountryService.") &&
                 ((ClientException)t.getSuppressed()[0]).getCode() == 400)
             .verify();
     }
 
     @Test
     public void testHandle5xxFromRest() throws IOException {
-        wireMock = new WebServiceWireMock();
-        wireMock.mockThisStatusForRest(500);
+        restWireMock = new RestServiceWireMock();
+        restWireMock.mockThisStatusForRest(500);
         Country request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
 
         countryService = new CountryService();
@@ -79,8 +86,8 @@ public class CountryServiceTest {
 
     @Test
     public void testConnectionResetByPeerRest() throws IOException {
-        wireMock = new WebServiceWireMock();
-        wireMock.mockNoConnectionForRestResponse();
+        restWireMock = new RestServiceWireMock();
+        restWireMock.mockNoConnectionForRestResponse();
         Country request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
 
         countryService = new CountryService();
@@ -93,8 +100,8 @@ public class CountryServiceTest {
 
     @Test
     public void testEmptyResponseRest() throws IOException {
-        wireMock = new WebServiceWireMock();
-        wireMock.mockEmptyResponseForRestResponse();
+        restWireMock = new RestServiceWireMock();
+        restWireMock.mockEmptyResponseForRestResponse();
         Country request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
 
         countryService = new CountryService();
@@ -107,8 +114,8 @@ public class CountryServiceTest {
 
     @Test
     public void testMalformedResponseChunkRest() throws IOException {
-        wireMock = new WebServiceWireMock();
-        wireMock.mockMalformedResponseForRestResponse();
+        restWireMock = new RestServiceWireMock();
+        restWireMock.mockMalformedResponseForRestResponse();
         Country request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
 
         countryService = new CountryService();
@@ -121,8 +128,8 @@ public class CountryServiceTest {
 
     @Test
     public void testRandomDataRest() throws IOException {
-        wireMock = new WebServiceWireMock();
-        wireMock.mockRandomDataForRestResponse();
+        restWireMock = new RestServiceWireMock();
+        restWireMock.mockRandomDataForRestResponse();
         Country request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
 
         countryService = new CountryService();
