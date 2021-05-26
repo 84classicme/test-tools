@@ -43,4 +43,8 @@ public class TestUtils {
         br.close();
         return sb.toString();
     }
+
+    public static Country buildCountry(){
+        return new Country("Utopia","Ritehere", 1,"MGB");
+    }
 }

@@ -1,13 +1,12 @@
 package com.example.feature;
 
+import com.example.WebClientConfig;
 import com.generated.CountriesPort;
 import com.generated.CountriesPortService;
 import com.generated.GetCountryRequest;
 import com.generated.GetCountryResponse;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -19,51 +18,64 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 @Service
-@Setter
 public class CountryService {
 
     @Value( "${soap.country-service.endpoint-url}" )
-    private String serviceEndpointUrl;
+    private String webserviceEndpointUrl;
 
-    @Autowired
-    ExceptionService exceptionService;
+    @Value( "${rest.country-service.endpoint-url}" )
+    private String restEndpointUrl;
+
+    private ExceptionService exceptionService;
 
     private WebClientConfig webClientConfig;
+
+    @Autowired
+    public CountryService(ExceptionService exceptionService){
+        this.exceptionService = exceptionService;
+    }
 
     public Mono<Country> getCountryFromRestService(Country input) {
         webClientConfig = new WebClientConfig();
         WebClient reactiveRestClient = webClientConfig.getReactiveRestClient();
         return reactiveRestClient.get()
-                .uri(serviceEndpointUrl+"/{name}", input.getName())
-                .retrieve()
-                // exchange() does not throw exceptions in case of 4xx or 5xx responses,
-                // retrieve does so handle them explicitly.
-                .onStatus(HttpStatus::is4xxClientError, response ->
-                    Mono.error(
-                        new ClientException(
-                            "CLIENT EXCEPTION in com.example.feature.CountryService.",
-                            response.rawStatusCode())) )
-                .onStatus(HttpStatus::is5xxServerError, response -> {
-                    System.err.println("EXCEPTION in com.example.feature.CountryService. Server returned code: " + response.rawStatusCode());
-                    return Mono.error( new ServiceException(
-                                            "EXTERNAL SERVICE EXCEPTION in com.example.feature.CountryService.",
-                                            response.rawStatusCode())); })
-                .bodyToMono(Country.class)
+                .uri(this.restEndpointUrl+"/{name}", input.getName())
+                .exchangeToMono(response -> {
+                    if(response.rawStatusCode() == 200){
+                        return response.bodyToMono(Country.class);
+                    }
+                    else if (response.statusCode().is4xxClientError()){
+                        return Mono.error(
+                            new ClientException(
+                                "CLIENT EXCEPTION in CountryService.",
+                                response.rawStatusCode())) ;
+                    } else if (response.statusCode().is5xxServerError()){
+                        return Mono.error(
+                            new ServiceException(
+                                "EXTERNAL SERVICE EXCEPTION in CountryService.",
+                                response.rawStatusCode()));
+                    } else {
+                        return Mono.error( new ServiceException(
+                            "SERVICE EXCEPTION in CountryService. Unexpected response. Retrying...",
+                            response.rawStatusCode()));
+                    }
+                })
                 .retryWhen(Retry.backoff(3, Duration.ofSeconds(5))
-                    .filter(throwable -> throwable instanceof ServiceException)
+                    .filter(throwable -> !(throwable instanceof ClientException))
                     .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> {
-                        ServiceException e = new ServiceException(
-                                                "External Service failed to process after max retries.",
-                                                500);
-                        this.handleServiceException(e, input);
+                        ServiceException e =
+                            new ServiceException(
+                                "External Service failed to process after max retries.",
+                                500);
+                        handleServiceException(e, input);
                         throw e;
                     }))
                 .onErrorResume(ClientException.class, clientException ->
-                    this.handleClientException(clientException, input)
+                    handleClientException(clientException, input)
                         .then(Mono.error(
-                                new ApplicationException(
-                                        "Cannot process com.example.feature.CountryService.getCountry due to client error.",
-                                        clientException))));
+                            new ApplicationException(
+                                    "Cannot process CountryService.getCountry due to client error.",
+                                    clientException))));
     }
 
     public Mono<GetCountryResponse> getCountryFromWebService(GetCountryRequest input) {
@@ -71,24 +83,24 @@ public class CountryService {
     }
 
     private Mono<Void> handleClientException(ClientException e, Country input){
-        System.out.println("Handling client exception in com.example.feature.CountryService.");
-        return this.recordException(e, input.toString());
+        System.out.println("Handling client exception in CountryService.");
+        return recordException(e, input.toString());
     }
 
     private Mono<Void> handleServiceException(ServiceException e, Country input){
-        System.out.println("Handling client exception in com.example.feature.CountryService.");
-        return this.recordException(e, input.toString()).then();
+        System.out.println("Handling service exception in CountryService.");
+        return recordException(e, input.toString());
     }
 
     private Mono<Void> recordException(Exception e, String payload){
-        System.out.println("Handling client exception in com.example.feature.CountryService.");
-        return exceptionService.recordExceptionEvent(buildExceptionEvent(e, payload)).then();
+        System.out.println("Recording exception in CountryService.");
+        return exceptionService.recordExceptionEvent(buildExceptionEvent(e, payload));
     }
 
     private ExceptionEvent buildExceptionEvent(Exception e, String payload){
         return ExceptionEvent.builder()
             .message(e.getMessage())
-            .service("com.example.feature.CountryService")
+            .service("CountryService")
             .exception(e.getClass().getSimpleName())
             .payload(payload)
             .timestamp(ZonedDateTime.now(ZoneOffset.UTC).toString()) //UTC timestamp as string
@@ -99,7 +111,7 @@ public class CountryService {
         CountriesPortService service = new CountriesPortService();
         CountriesPort portType = service.getCountriesPortSoap11();
         BindingProvider bp = (BindingProvider)portType;
-        bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, serviceEndpointUrl);
+        bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, webserviceEndpointUrl);
         return portType;
     }
 }
