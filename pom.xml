@@ -194,59 +194,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                </configuration>
-            </plugin>
-
-
-            <!--            <plugin>-->
-<!--                <groupId>org.codehaus.mojo</groupId>-->
-<!--                <artifactId>jaxb2-maven-plugin</artifactId>-->
-<!--                <version>2.5.0</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>xjc</id>-->
-<!--                        <goals>-->
-<!--                            <goal>xjc</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--                <configuration>-->
-<!--                    <sources>-->
-<!--                        <source>${project.basedir}/src/main/resources/countries.wsdl</source>-->
-<!--                    </sources>-->
-<!--                    <arguments>-->
-<!--                        <argument>-wsdl</argument>-->
-<!--                    </arguments>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-
-
-<!--        <plugin>-->
-<!--            <groupId>org.jvnet.jaxb2.maven2</groupId>-->
-<!--            <artifactId>maven-jaxb2-plugin</artifactId>-->
-<!--            <version>0.14.0</version>-->
-<!--            <executions>-->
-<!--                <execution>-->
-<!--                    <goals>-->
-<!--                        <goal>generate</goal>-->
-<!--                    </goals>-->
-<!--                </execution>-->
-<!--            </executions>-->
-<!--            <configuration>-->
-<!--                <schemaLanguage>WSDL</schemaLanguage>-->
-<!--                <generatePackage>com.medium.article</generatePackage>-->
-<!--                <schemaDirectory>src/main/resources/wsdl</schemaDirectory>-->
-<!--                <schemaIncludes>-->
-<!--                    <schemaInclude>*.wsdl</schemaInclude>-->
-<!--                </schemaIncludes>-->
-<!--            </configuration>-->
-<!--        </plugin>-->
         </plugins>
     </build>
 </project>
