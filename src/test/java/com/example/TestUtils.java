@@ -45,6 +45,11 @@ public class TestUtils {
     }
 
     public static Country buildCountry(){
-        return new Country("Utopia","Ritehere", 1,"MGB");
+        return Country.builder()
+            .name("Utopia")
+            .capital("Ritehere")
+            .population(1)
+            .currency("MGB")
+            .build();
     }
 }

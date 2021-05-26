@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 public class CountryController {
 
     @Autowired
-    CountryService countryService;
+    CountryRepository countryRepository;
 
     @GetMapping(
         value = "/country/{name}",
@@ -30,7 +30,6 @@ public class CountryController {
             value = "Name of the country to fetch data about",
             example = "Utopia")
         @PathVariable String name){
-        Country country = Country.builder().name(name).build();
-        return countryService.getCountryFromRestService(country);
+        return countryRepository.findByName(name);
     }
 }
