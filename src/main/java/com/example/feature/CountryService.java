@@ -103,7 +103,7 @@ public class CountryService {
             .service("CountryService")
             .exception(e.getClass().getSimpleName())
             .payload(payload)
-            .timestamp(ZonedDateTime.now(ZoneOffset.UTC).toString()) //UTC timestamp as string
+            .datetime(ZonedDateTime.now(ZoneOffset.UTC).toString()) //UTC timestamp as string
             .build();
     }
 

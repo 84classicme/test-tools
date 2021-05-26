@@ -13,7 +13,6 @@ import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer;
 import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
 
 import java.time.Duration;
-import java.util.Arrays;
 
 @SpringBootApplication
 @EnableR2dbcRepositories

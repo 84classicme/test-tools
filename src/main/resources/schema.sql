@@ -1,1 +1,2 @@
 CREATE TABLE country (id SERIAL PRIMARY KEY, name VARCHAR(255), capital VARCHAR(255), population INTEGER, currency VARCHAR(255));
+CREATE TABLE exceptions (id SERIAL PRIMARY KEY, service VARCHAR(255), excptn_name VARCHAR(255), excptn_msg VARCHAR(255), datetime VARCHAR(255), payload VARCHAR(255));
