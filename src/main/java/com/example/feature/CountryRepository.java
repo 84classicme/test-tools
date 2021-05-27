@@ -1,11 +1,9 @@
 package com.example.feature;
 
-import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
-import reactor.core.publisher.Mono;
 
-public interface CountryRepository extends ReactiveCrudRepository<CountryDto, Long> {
+import org.springframework.data.jpa.repository.JpaRepository;
 
-    @Query("SELECT * FROM country WHERE name = :name")
-    Mono<CountryDto> findByName(String name);
+public interface CountryRepository extends JpaRepository<CountryDto, Long> {
+
+    CountryDto findByName(String name);
 }

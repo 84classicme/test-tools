@@ -1,0 +1,8 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 77
+
+{"name":"Utopia","capital":"Ritehere","population":1,"currency":"MGB","id":0}
+----

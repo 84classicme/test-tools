@@ -1,0 +1,1 @@
+INSERT INTO country(id, name,capital,population,currency) VALUES (1, 'Utopia', 'Ritehere', 1, 'MGB');

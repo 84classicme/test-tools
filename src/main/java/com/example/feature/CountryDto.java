@@ -1,20 +1,24 @@
 package com.example.feature;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table("country")
+@Entity(name="country")
 public class CountryDto {
-    @Id
+    @Id()
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     private String name;
     private String capital;

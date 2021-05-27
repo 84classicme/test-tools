@@ -1,6 +1,5 @@
 package com.example;
 
-import com.generated.GetCountryResponse;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.util.StringUtils;
@@ -29,7 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.getAllServeEvents;
 
 @TestComponent
 public class WebServiceWireMock {
@@ -42,13 +41,13 @@ public class WebServiceWireMock {
         return getAllServeEvents();
     }
 
-    public void mockGetCountrySoapResponse(final String pathToXml) throws IOException {
-        String response = "";
-        GetCountryResponse fromXmlSoapObject = TestUtils.getCountryResponseFromXml(pathToXml);
-        response = serializeObject(fromXmlSoapObject);
-        stubFor(post(urlPathMatching(SOAP_SERVICE_ENDPOINT))
-            .willReturn(aResponse().withHeader("Content-Type", "text/xml").withBody(response)));
-    }
+//    public void mockGetCountrySoapResponse(final String pathToXml) throws IOException {
+//        String response = "";
+//        GetCountryResponse fromXmlSoapObject = TestUtils.getCountryResponseFromXml(pathToXml);
+//        response = serializeObject(fromXmlSoapObject);
+//        stubFor(post(urlPathMatching(SOAP_SERVICE_ENDPOINT))
+//            .willReturn(aResponse().withHeader("Content-Type", "text/xml").withBody(response)));
+//    }
 
     public <T> String serializeObject(T object){
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

@@ -1,0 +1,4 @@
+[source,options="nowrap"]
+----
+{"name":"Utopia","capital":"Ritehere","population":1,"currency":"MGB","id":0}
+----

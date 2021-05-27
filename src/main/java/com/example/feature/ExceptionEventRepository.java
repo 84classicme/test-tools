@@ -1,6 +1,7 @@
 package com.example.feature;
 
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
-public interface ExceptionEventRepository extends ReactiveCrudRepository<ExceptionEvent, Long> {
+import org.springframework.data.repository.CrudRepository;
+
+public interface ExceptionEventRepository extends CrudRepository<ExceptionEvent, Long> {
 }

@@ -1,3 +1,7 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
 rest:
   country-service:
     endpoint-url: http://localhost:8088/country
