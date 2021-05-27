@@ -38,14 +38,14 @@ public class CountryService {
         this.exceptionService = exceptionService;
     }
 
-    public Mono<Country> getCountryFromRestService(Country input) {
+    public Mono<CountryRequest> getCountryFromRestService(CountryRequest input) {
         webClientConfig = new WebClientConfig();
         WebClient reactiveRestClient = webClientConfig.getReactiveRestClient();
         return reactiveRestClient.get()
                 .uri(this.restEndpointUrl+"/{name}", input.getName())
                 .exchangeToMono(response -> {
                     if(response.rawStatusCode() == 200){
-                        return response.bodyToMono(Country.class);
+                        return response.bodyToMono(CountryRequest.class);
                     }
                     else if (response.statusCode().is4xxClientError()){
                         return Mono.error(
@@ -61,8 +61,7 @@ public class CountryService {
                         return Mono.error( new ServiceException(
                             "SERVICE EXCEPTION in CountryService. Unexpected response. Retrying...",
                             response.rawStatusCode()));
-                    }
-                })
+                    }})
                 .retryWhen(Retry.backoff(3, Duration.ofSeconds(5))
                     .filter(throwable -> !(throwable instanceof ClientException))
                     .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> {
@@ -82,19 +81,28 @@ public class CountryService {
     }
 
     public Mono<Country> getCountryFromLocal(String name){
-        return countryRepository.findByName(name).onErrorResume(Exception.class, e -> Mono.just(new Country()));
+        return countryRepository.findByName(name).map(CountryMapper::mapDtoToCountry);
+    }
+
+    public Mono<Country> saveCountryToLocal(Country country){
+        CountryDto dto = CountryMapper.mapCountryToDto(country);
+        return countryRepository.save(dto).map(CountryMapper::mapDtoToCountry);
+    }
+
+    public Mono<Void> deleteCountryFromLocal(Long id){
+        return countryRepository.deleteById(id).onErrorResume(Exception.class, e -> Mono.empty());
     }
 
     public Mono<GetCountryResponse> getCountryFromWebService(GetCountryRequest input) {
        return Mono.create(sink -> getPortType().getCountryAsync(input, ReactorAsyncHandler.into(sink)));
     }
 
-    private Mono<Void> handleClientException(ClientException e, Country input){
+    private Mono<Void> handleClientException(ClientException e, CountryRequest input){
         System.out.println("Handling client exception in CountryService.");
         return recordException(e, input.toString());
     }
 
-    private Mono<Void> handleServiceException(ServiceException e, Country input){
+    private Mono<Void> handleServiceException(ServiceException e, CountryRequest input){
         System.out.println("Handling service exception in CountryService.");
         return recordException(e, input.toString());
     }

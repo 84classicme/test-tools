@@ -1,20 +1,17 @@
 package com.example.feature;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Country {
-    @Id
-    Long id;
-    String name;
-    String capital;
-    int population;
-    String currency;
+@SuperBuilder
+public class Country extends CountryRequest{
+    @ApiModelProperty(example = "12345")
+    private long id;
 }

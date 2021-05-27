@@ -1,6 +1,7 @@
 package com.example;
 
 import com.example.feature.Country;
+import com.example.feature.CountryRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.generated.GetCountryRequest;
@@ -10,11 +11,11 @@ import java.io.*;
 
 public class TestUtils {
 
-    public static Country getCountryFromJson(String path) throws IOException {
+    public static CountryRequest getCountryFromJson(String path) throws IOException {
         if (path == null || path.isEmpty()) path = "src/test/resources/json/country.json";
         File file = new File(path);
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(file, Country.class);
+        return mapper.readValue(file, CountryRequest.class);
     }
 
     public static GetCountryRequest getCountryRequestFromXml(String path) throws IOException {
@@ -46,9 +47,10 @@ public class TestUtils {
 
     public static Country buildCountry(){
         return Country.builder()
-            .name("Utopia")
+            .id(0)
             .capital("Ritehere")
             .population(1)
+            .name("Utopia")
             .currency("MGB")
             .build();
     }

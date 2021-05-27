@@ -1,6 +1,7 @@
 package com.example;
 
-import com.example.feature.Country;
+import com.example.feature.CountryDto;
+import com.example.feature.CountryRequest;
 import com.example.feature.CountryRepository;
 import io.r2dbc.spi.ConnectionFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -11,11 +12,17 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer;
 import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.time.Duration;
 
 @SpringBootApplication
 @EnableR2dbcRepositories
+@EnableSwagger2
 public class Application {
     public static void main(String[] args){
         SpringApplication.run(Application.class, args);
@@ -37,9 +44,18 @@ public class Application {
 
         return (args) -> {
             // save a few customers
-            repository.save(Country.builder().name("Utopia").capital("Ritehere").population(1).currency("MGB").build())
+            repository.save(CountryDto.builder().name("Utopia").capital("Ritehere").population(1).currency("MGB").build())
                 .block(Duration.ofSeconds(10));
 
         };
+    }
+
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+            .select()
+            .apis(RequestHandlerSelectors.any())
+            .paths(PathSelectors.any())
+            .build();
     }
 }

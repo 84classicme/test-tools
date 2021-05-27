@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import static org.mockito.ArgumentMatchers.anyString;
 
-public class CountryControllerTest {
+public class CountryRequestControllerTest {
 
     @Mock
     CountryService countryServiceMock;
@@ -29,7 +29,7 @@ public class CountryControllerTest {
 
     @Test
     public void testGetCountryFromRest() throws IOException {
-        Country request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
+        CountryRequest request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
         Mockito.when(countryServiceMock.getCountryFromLocal(anyString())).thenReturn(Mono.just(TestUtils.buildCountry()));
 
         StepVerifier.create(countryController.getCountry(request.getName()))

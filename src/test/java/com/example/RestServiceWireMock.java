@@ -1,6 +1,6 @@
 package com.example;
 
-import com.example.feature.Country;
+import com.example.feature.CountryRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.http.Fault;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
@@ -23,7 +23,7 @@ public class RestServiceWireMock {
 
     public void mockGetCountryRest(final String pathToJson) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        Country response = mapper.readValue(new File(pathToJson), Country.class);
+        CountryRequest response = mapper.readValue(new File(pathToJson), CountryRequest.class);
         stubFor(get(urlMatching(REST_SERVICE_ENDPOINT))
             .willReturn(aResponse().withHeader("Content-Type", "application/json").withBody(mapper.writeValueAsString(response))));
     }

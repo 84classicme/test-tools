@@ -19,7 +19,7 @@ import java.io.IOException;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.mockito.ArgumentMatchers.any;
 
-public class CountryServiceTest {
+public class CountryRequestServiceTest {
 
     @ClassRule
     public static WireMockRule wireMockRule = new WireMockRule(options().port(8088),false);
@@ -65,7 +65,7 @@ public class CountryServiceTest {
     public void testGetCountryFromRest() throws IOException {
         restWireMock = new RestServiceWireMock();
         restWireMock.mockGetCountryRest("src/test/resources/json/country.json");
-        Country request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
+        CountryRequest request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
 
         StepVerifier.create(countryService.getCountryFromRestService(request))
             .expectNextMatches(response -> "MyCountry".equals(response.getName()) && response.getPopulation() == 1)
@@ -76,7 +76,7 @@ public class CountryServiceTest {
     public void testHandle4xxFromRest() throws IOException {
         restWireMock = new RestServiceWireMock();
         restWireMock.mockThisStatusForRest(400);
-        Country request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
+        CountryRequest request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
         Mockito.when(exceptionServiceMock.recordExceptionEvent(any(ExceptionEvent.class))).thenReturn(Mono.empty());
 
         StepVerifier.create(countryService.getCountryFromRestService(request))
@@ -98,7 +98,7 @@ public class CountryServiceTest {
     public void testHandle5xxFromRest() throws IOException {
         restWireMock = new RestServiceWireMock();
         restWireMock.mockThisStatusForRest(500);
-        Country request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
+        CountryRequest request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
         Mockito.when(exceptionServiceMock.recordExceptionEvent(any(ExceptionEvent.class))).thenReturn(Mono.empty());
 
         StepVerifier.create(countryService.getCountryFromRestService(request))
@@ -110,7 +110,7 @@ public class CountryServiceTest {
     public void testConnectionResetByPeerRest() throws IOException {
         restWireMock = new RestServiceWireMock();
         restWireMock.mockNoConnectionForRestResponse();
-        Country request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
+        CountryRequest request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
         Mockito.when(exceptionServiceMock.recordExceptionEvent(any(ExceptionEvent.class))).thenReturn(Mono.empty());
 
         StepVerifier.create(countryService.getCountryFromRestService(request))
@@ -122,7 +122,7 @@ public class CountryServiceTest {
     public void testEmptyResponseRest() throws IOException {
         restWireMock = new RestServiceWireMock();
         restWireMock.mockEmptyResponseForRestResponse();
-        Country request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
+        CountryRequest request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
         Mockito.when(exceptionServiceMock.recordExceptionEvent(any(ExceptionEvent.class))).thenReturn(Mono.empty());
 
         StepVerifier.create(countryService.getCountryFromRestService(request))
@@ -134,7 +134,7 @@ public class CountryServiceTest {
     public void testMalformedResponseChunkRest() throws IOException {
         restWireMock = new RestServiceWireMock();
         restWireMock.mockMalformedResponseForRestResponse();
-        Country request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
+        CountryRequest request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
         Mockito.when(exceptionServiceMock.recordExceptionEvent(any(ExceptionEvent.class))).thenReturn(Mono.empty());
 
         StepVerifier.create(countryService.getCountryFromRestService(request))
@@ -146,7 +146,7 @@ public class CountryServiceTest {
     public void testRandomDataRest() throws IOException {
         restWireMock = new RestServiceWireMock();
         restWireMock.mockRandomDataForRestResponse();
-        Country request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
+        CountryRequest request = TestUtils.getCountryFromJson("src/test/resources/json/country.json");
         Mockito.when(exceptionServiceMock.recordExceptionEvent(any(ExceptionEvent.class))).thenReturn(Mono.empty());
 
         StepVerifier.create(countryService.getCountryFromRestService(request))
