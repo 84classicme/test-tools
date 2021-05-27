@@ -5,10 +5,11 @@ import com.example.TestUtils;
 import com.example.WebServiceWireMock;
 import com.generated.GetCountryRequest;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.springframework.test.util.ReflectionTestUtils;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -23,10 +24,20 @@ public class CountryServiceTest {
     @ClassRule
     public static WireMockRule wireMockRule = new WireMockRule(options().port(8088),false);
 
-    CountryService countryService;
     WebServiceWireMock wsWireMock;
     RestServiceWireMock restWireMock;
+
+    @Mock
+    CountryRepository countryRepository;
+
+    @Mock
     ExceptionService exceptionServiceMock;
+
+    @InjectMocks
+    CountryService countryService;
+
+    @Captor
+    ArgumentCaptor<ExceptionEvent> exceptionEventCaptor;
 
     private static final String WEBSERVICE_URL = "http://localhost:8088/getCountry";
     private static final String REST_SERVICE_URL = "http://localhost:8088/country";
@@ -34,8 +45,7 @@ public class CountryServiceTest {
 
     @Before
     public void setup(){
-        exceptionServiceMock = Mockito.mock(ExceptionService.class);
-        countryService = new CountryService(exceptionServiceMock);
+        MockitoAnnotations.openMocks(this);
         ReflectionTestUtils.setField(countryService, "webserviceEndpointUrl", WEBSERVICE_URL);
         ReflectionTestUtils.setField(countryService, "restEndpointUrl", REST_SERVICE_URL);
     }
@@ -74,7 +84,14 @@ public class CountryServiceTest {
                 t.getSuppressed()[0] instanceof ClientException &&
                 t.getSuppressed()[0].getMessage().equals("CLIENT EXCEPTION in CountryService.") &&
                 ((ClientException)t.getSuppressed()[0]).getCode() == 400)
-            .verify();
+            .verifyThenAssertThat()
+            .hasNotDroppedElements()
+            .hasNotDiscardedElements()
+            .hasNotDroppedErrors();
+
+        Mockito.verify(exceptionServiceMock).recordExceptionEvent(exceptionEventCaptor.capture());
+        ExceptionEvent captured = exceptionEventCaptor.getValue();
+        Assertions.assertThat(captured).isNotNull();
     }
 
     @Test

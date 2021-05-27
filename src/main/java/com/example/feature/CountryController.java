@@ -12,8 +12,12 @@ import reactor.core.publisher.Mono;
 @RestController
 public class CountryController {
 
+    private CountryService countryService;
+
     @Autowired
-    CountryRepository countryRepository;
+    public CountryController(CountryService countryService){
+        this.countryService = countryService;
+    }
 
     @GetMapping(
         value = "/country/{name}",
@@ -30,6 +34,6 @@ public class CountryController {
             value = "Name of the country to fetch data about",
             example = "Utopia")
         @PathVariable String name){
-        return countryRepository.findByName(name);
+        return countryService.getCountryFromLocal(name);
     }
 }

@@ -26,12 +26,15 @@ public class CountryService {
     @Value( "${rest.country-service.endpoint-url}" )
     private String restEndpointUrl;
 
+    private CountryRepository countryRepository;
+
     private ExceptionService exceptionService;
 
     private WebClientConfig webClientConfig;
 
     @Autowired
-    public CountryService(ExceptionService exceptionService){
+    public CountryService(CountryRepository countryRepository, ExceptionService exceptionService){
+        this.countryRepository = countryRepository;
         this.exceptionService = exceptionService;
     }
 
@@ -76,6 +79,10 @@ public class CountryService {
                             new ApplicationException(
                                     "Cannot process CountryService.getCountry due to client error.",
                                     clientException))));
+    }
+
+    public Mono<Country> getCountryFromLocal(String name){
+        return countryRepository.findByName(name).onErrorResume(Exception.class, e -> Mono.just(new Country()));
     }
 
     public Mono<GetCountryResponse> getCountryFromWebService(GetCountryRequest input) {

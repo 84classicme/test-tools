@@ -11,14 +11,14 @@ import java.io.*;
 public class TestUtils {
 
     public static Country getCountryFromJson(String path) throws IOException {
-        if (path == null || path.isBlank()) path = "src/test/resources/json/country.json";
+        if (path == null || path.isEmpty()) path = "src/test/resources/json/country.json";
         File file = new File(path);
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(file, Country.class);
     }
 
     public static GetCountryRequest getCountryRequestFromXml(String path) throws IOException {
-        if (path == null || path.isBlank()) path = "src/test/resources/xml/CountryRequest.xml";
+        if (path == null || path.isEmpty()) path = "src/test/resources/xml/CountryRequest.xml";
         File file = new File(path);
         XmlMapper xmlMapper = new XmlMapper();
         String xml = inputStreamToString(new FileInputStream(file));
@@ -26,7 +26,7 @@ public class TestUtils {
     }
 
     public static GetCountryResponse getCountryResponseFromXml(String path) throws IOException {
-        if (path == null || path.isBlank()) path = "src/test/resources/xml/CountryResponse.xml";
+        if (path == null || path.isEmpty()) path = "src/test/resources/xml/CountryResponse.xml";
         File file = new File(path);
         XmlMapper xmlMapper = new XmlMapper();
         String xml = inputStreamToString(new FileInputStream(file));
