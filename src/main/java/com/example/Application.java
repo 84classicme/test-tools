@@ -1,8 +1,7 @@
 package com.example;
 
-import com.example.feature.CountryDto;
-import com.example.feature.CountryRequest;
-import com.example.feature.CountryRepository;
+import com.example.country.CountryDto;
+import com.example.country.CountryRepository;
 import io.r2dbc.spi.ConnectionFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

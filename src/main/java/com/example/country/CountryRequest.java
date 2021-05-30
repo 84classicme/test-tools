@@ -1,14 +1,11 @@
-package com.example.feature;
+package com.example.country;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.Id;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Data
 @AllArgsConstructor

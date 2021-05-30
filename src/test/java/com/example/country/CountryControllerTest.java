@@ -1,4 +1,4 @@
-package com.example.feature;
+package com.example.country;
 
 import com.example.TestUtils;
 import org.junit.Before;
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import static org.mockito.ArgumentMatchers.anyString;
 
-public class CountryRequestControllerTest {
+public class CountryControllerTest {
 
     @Mock
     CountryService countryServiceMock;

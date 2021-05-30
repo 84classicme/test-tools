@@ -1,4 +1,4 @@
-package com.example.feature;
+package com.example.country;
 
 import com.example.RestServiceWireMock;
 import com.example.TestUtils;
@@ -19,7 +19,7 @@ import java.io.IOException;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.mockito.ArgumentMatchers.any;
 
-public class CountryRequestServiceTest {
+public class CountryServiceTest {
 
     @ClassRule
     public static WireMockRule wireMockRule = new WireMockRule(options().port(8088),false);

@@ -1,4 +1,4 @@
-package com.example.feature;
+package com.example.country;
 
 import lombok.Builder;
 import lombok.Data;

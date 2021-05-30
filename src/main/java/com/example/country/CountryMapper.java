@@ -1,4 +1,4 @@
-package com.example.feature;
+package com.example.country;
 
 public class CountryMapper {
     public static Country mapDtoToCountry(CountryDto dto){

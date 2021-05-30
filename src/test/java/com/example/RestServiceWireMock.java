@@ -1,6 +1,6 @@
 package com.example;
 
-import com.example.feature.CountryRequest;
+import com.example.country.CountryRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.http.Fault;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;

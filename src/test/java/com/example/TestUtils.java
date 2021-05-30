@@ -1,7 +1,7 @@
 package com.example;
 
-import com.example.feature.Country;
-import com.example.feature.CountryRequest;
+import com.example.country.Country;
+import com.example.country.CountryRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.generated.GetCountryRequest;

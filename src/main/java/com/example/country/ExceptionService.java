@@ -1,4 +1,4 @@
-package com.example.feature;
+package com.example.country;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

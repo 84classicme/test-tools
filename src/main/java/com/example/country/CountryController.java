@@ -1,4 +1,4 @@
-package com.example.feature;
+package com.example.country;
 
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;

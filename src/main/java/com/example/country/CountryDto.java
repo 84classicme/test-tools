@@ -1,6 +1,5 @@
-package com.example.feature;
+package com.example.country;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
